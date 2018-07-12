@@ -27,11 +27,10 @@
                 + '     <div class="slide-inner--info user">'
                 + '         <div class="avatar-container">'
                 + '             <div class="avatar">'
+                + '                 <img width="100%" height="100%" src="' + image + '" alt="avatar"/>'
                 + '             </div>'
-                + '             <div class="info">'
-                + '             <p class="avatar"> asdfasdf'
+                + '             <p class="info"> ' + title
                 + '             </p>'
-                + '             </div>'
                 + '         </div>'
                 + '     </div>'
                 + '     <div class="slide-inner--info">'
@@ -52,15 +51,6 @@
 
 /* Page Transition */
 function PageTransition() {
-    // var preload = anime({
-    //     targets: '.ms-preloader',
-    //     opacity: [1, 0],
-    //     duration: 1500,
-    //     easing: 'easeInOutCubic',
-    //     // complete: function (preload) {
-    //     //     // $('.ms-preloader').css('visibility', 'hidden');
-    //     // }
-    // });
     $('.ms-main-container').addClass('loaded');
     var cont = anime({
         targets: '.loaded',
