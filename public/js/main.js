@@ -1,84 +1,102 @@
-(function(window) {
+(function (window) {
 
-  'use strict';
+    'use strict';
 
-  $.exists = function(selector) {
-      return ($(selector).length > 0);
-  }
-
-  window.onpageshow = function(event) {
-    if (event.persisted) {
-        PageTransition(); 
+    $.exists = function (selector) {
+        return ($(selector).length > 0);
     }
-  };
 
-  // All Funtions
-  PageTransition();
-  Menu();
-  ms_home_slider();
-  Sort();
-  UniteGallery();
-  ValidForm();
+    PageTransition();
+    $.ajax({
+        url: "/api/data",
+    }).done(function(response) {
+        setTimeout(() => {
+            $('.ms-preloader').css('visibility', 'hidden');
+            $('#progress').removeClass('progress').animate({'nothing':null}, 1, function () {
+                $(this).addClass('progress');
+                $(this).css('animationDuration', '3s');
+            });
+            var listData = response.message.listData;
+            listData.forEach(function (el,i) {
+                var title = el.title;
+                var image = el.image;
+                var html = '<div class="swiper-slide">'
+                + '<div class="slide-inner" data-swiper-parallax="45%">'
+                + '  <div class="overlay"></div>'
+                + '  <div class="slide-inner--image" style="background-image: url(' + image + ')"></div>'
+                + '     <div class="slide-inner--info user">'
+                + '         <div class="avatar-container">'
+                + '             <div class="avatar">'
+                + '             </div>'
+                + '             <div class="info">'
+                + '             <p class="avatar"> asdfasdf'
+                + '             </p>'
+                + '             </div>'
+                + '         </div>'
+                + '     </div>'
+                + '     <div class="slide-inner--info">'
+                + '         <h1>' + title + '</h1>'
+                + '         <a href="#" data-type="page-transition" class="ms-btn--slider">View Info</a>'
+                + '     </div>'
+                + '  </div>'
+                + '</div>';
+
+                $('.swiper-container .swiper-wrapper').append(html);
+            })
+            ms_home_slider();
+        }, 3000);
+    });
+
 
 })(window);
 
 /* Page Transition */
 function PageTransition() {
-  var preload = anime({
-      targets: '.ms-preloader',
-      opacity: [1, 0],
-      duration: 1000,
-      easing: 'easeInOutCubic',
-      complete: function(preload) {
-          $('.ms-preloader').css('visibility', 'hidden');
-      }
-  });
-  $('.ms-main-container').addClass('loaded');
-  var cont = anime({
-      targets: '.loaded',
-      opacity: [0, 1],
-      easing: 'easeInOutCubic',
-      duration: 1000,
-      delay: 300,
-      complete: function(preload) {
-          $('.ug-thumb-image').css({
-              'opacity': '1'
-          });
-          $('.ms-section__block img').css({
-              'opacity': '1'
-          });
-          $('.ug-thumb-wrapper, .post-item').css({
-              'pointer-events': 'auto'
-          });
-      }
-  });
-  $(document).on('click', '[data-type="page-transition"]', function(e) {
-      var url = $(this).attr('href');
-      if (url != '#' && url != '') {
-          e.preventDefault();
-          $('.ms-preloader').css('visibility', 'visible');
-          var url = $(this).attr('href');
-          var preload = anime({
-              targets: '.ms-preloader',
-              opacity: [0, 1],
-              duration: 300,
-              easing: 'easeInOutQuad',
-              complete: function(preload) {
-                  window.location.href = url;
-              }
-          });
-      }
-  });
-}
-
-function Sort() {
-    if ($.exists('.filtr-container')) {
-        $('.filtr-container').filterizr();
-        $('.filtr-btn li').on('click', function() {
-            $('.filtr-btn li').removeClass('active');
-            $(this).addClass('active');
-        });
-    }
+    // var preload = anime({
+    //     targets: '.ms-preloader',
+    //     opacity: [1, 0],
+    //     duration: 1500,
+    //     easing: 'easeInOutCubic',
+    //     // complete: function (preload) {
+    //     //     // $('.ms-preloader').css('visibility', 'hidden');
+    //     // }
+    // });
+    $('.ms-main-container').addClass('loaded');
+    var cont = anime({
+        targets: '.loaded',
+        opacity: [0, 1],
+        easing: 'easeInOutCubic',
+        duration: 1000,
+        delay: 300,
+        complete: function (preload) {
+            $('.ug-thumb-image').css({
+                'opacity': '1'
+            });
+            $('.ms-section__block img').css({
+                'opacity': '1'
+            });
+            $('.ug-thumb-wrapper, .post-item').css({
+                'pointer-events': 'auto'
+            });
+        }
+    });
+    $(document).on('click', '[data-type="page-transition"]', function (e) {
+        var url = $(this).attr('href');
+        if (url != '#' && url != '') {
+            e.preventDefault();
+            $('.ms-preloader').css('visibility', 'visible');
+            var url = $(this).attr('href');
+            var preload = anime({
+                targets: '.ms-preloader',
+                opacity: [0, 1],
+                duration: 300,
+                easing: 'easeInOutQuad',
+                complete: function (preload) {
+                    window.location.href = url;
+                }
+            });
+        }
+    });
 }
 
 /* Home Slider */
@@ -86,136 +104,34 @@ function ms_home_slider() {
     if ($.exists('.swiper-container')) {
         var swiper = new Swiper('.swiper-container', {
             autoplay: {
-                waitForTransition: true,
                 delay: 3000,
+                disableOnInteraction: false,
             },
             loop: true,
             speed: 1000,
-            grabCursor: false,
             mousewheel: true,
             keyboard: true,
-            simulateTouch: true,
-            parallax: true,
-            progress: true,
-            effect: 'cube',
+            effect: 'fade',
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
             },
-            watchSlidesProgress:true,
+            watchSlidesProgress: true,
         });
-        swiper.on('transitionStart', function (progress) {
-            console.log(progress)
-        })
-    }
-}
 
-function UniteGallery() {
-    if ($.exists('#gallery')) {
-        $('#gallery').unitegallery({
-            gallery_theme: 'tiles',
-            tiles_type: "justified",
-            tiles_col_width: 400,
-            tiles_justified_row_height: 400,
-            tiles_justified_space_between: 30,
-            // tile_overlay_color: "#000",
-            tile_overlay_opacity: 0.7,
-            tile_enable_icons: false,
-            tile_textpanel_position: "inside_bottom",
-        });
-    }
-}
-
-/*------------------
- Form Validation
--------------------*/
-function ValidForm() {
-    if ($.exists('#validForm')) {
-        $('.form-control').focus(function() {
-            $(this).prev('.control-label').addClass('active');
-        });
-        $('.form-control').focusout(function() {
-            $(this).prev('.control-label').removeClass('active');
-        });
-        $("#validForm").validate({
-            ignore: ":hidden",
-            rules: {
-                name: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 16,
-                },
-                email: {
-                    required: true,
-                    email: true,
-                },
-                subject: {
-                    required: true,
-                    minlength: 4,
-                    maxlength: 32,
-                },
-                message: {
-                    required: true,
-                    minlength: 16,
-                },
-            },
-            messages: {
-                name: {
-                    required: "<span>Please enter your name</span>",
-                    minlength: "<span>Your name must consist of at least 2 characters</span>",
-                    maxlength: "<span>The maximum number of characters - 24</span>",
-                },
-                email: {
-                    required: "<span>Please enter your email</span>",
-                    email: "<span>Please enter a valid email address.</span>",
-                },
-                subject: {
-                    required: "<span>Please enter your subject</span>",
-                    minlength: "<span>Your name must consist of at least 2 characters</span>",
-                    maxlength: "<span>The maximum number of characters - 16</span>",
-                },
-                message: {
-                    required: "<span>Please write me message</span>",
-                    minlength: "<span>Your message must consist of at least 16 characters</span>",
-                    maxlength: "<span>The maximum number of characters - 100 </span>",
-                },
-            },
-            submitHandler: function(form) {
-                $.ajax({
-                    type: "POST",
-                    url: "contact.php",
-                    data: $(form).serialize(),
-                    beforeSend: function() {
-                        // do something
-                    },
-                    success: function(data) {
-                        if (data == "Email sent!");
-                        $('input, textarea').val('');
-                        $('.form-group').blur();
-                        // do something
-                    }
-                });
-                return false;
-            }
-        });
-    }
-}
-
-function Menu() {
-    if ($.exists('.hamburger')) {
-        $('.hamburger').on('click', function(e) {
-            var burger = $(this);
-            $(burger).toggleClass('is-active');
-            $('.ms-nav').toggleClass('is-visible');
-            $('.ms-header').not('.navbar-white').each(function() {
-                $('.logo-light').toggleClass('active');
+        swiper.on('slideChange', function () {
+            swiper.autoplay.start();
+            $('#progress').removeClass('progress').animate({'nothing':null}, 1, function () {
+                $(this).addClass('progress');
+                $(this).css('animationDuration', '4s');
             });
-        });
-        $('.height-full-viewport').on({'mousewheel': function(e) {
-            if (e.target.id === 'el') return;
-            e.preventDefault();
-            e.stopPropagation();
-        }
-})
+        })
+
+        swiper.on('touchMove', function () {
+            swiper.autoplay.start();
+            $('#progress').removeClass('progress').animate({'nothing':null}, 1, function () {
+                $(this).addClass('progress');
+            });
+        })
     }
 }

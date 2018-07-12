@@ -255,7 +255,7 @@ p {
 
 .ms-header {
     position: fixed;
-    width: 100%;
+    /* width: 100%; */
     background-color: #fff;
     z-index: 3;
 }
@@ -276,7 +276,8 @@ p {
 }
 .ms-logo img {
     width: auto;
-    height: 100%;
+    height: auto;
+    max-height: 100px;
 }
 .logo-dark.current,
 .logo-light.current {
@@ -506,7 +507,7 @@ p {
     left: 0;
     opacity: 1;
     visibility: visible;
-    background-color: #151515;
+    background-color: #fff;
 }
 .ms-main-container {
     position: relative;
@@ -636,7 +637,7 @@ p {
 .swiper-button-prev::after {
     content: "";
     width: 4em;
-    height: 1px;
+    height: 2px;
     background-color: #fff;
     position: absolute;
     left: 0;
@@ -648,7 +649,7 @@ p {
 .swiper-button-next::after {
     content: "";
     width: 4em;
-    height: 1px;
+    height: 2px;
     background-color: #fff;
     position: absolute;
     right: 0;
@@ -687,6 +688,13 @@ p {
     -ms-user-select: none;
     user-select: none;
 }
+
+.slide-inner--info.user {
+    bottom: auto;
+    top: 1em;
+
+}
+
 .swiper-slide-active .slide-inner--info {
     opacity: 1;
     transition: opacity 1s ease 1s;
@@ -1297,4 +1305,34 @@ footer {
 .swiper-button-next {
     right: auto !important;
     left: 10% !important;
+}
+
+@keyframes progress {
+    from {width: 0;}
+    to {width: 100%;}
+}
+
+.progress {
+    height: 5px;
+    width: 0;
+    background: white;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    animation-name: progress;
+    animation-duration: 3s;
+    animation-timing-function: ease;
+}
+.img-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.img-loader {
+    max-width: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
